@@ -29,8 +29,8 @@ type Vehicle = {
   registration: string;
   capacity: number;
   status: string;
-  latitude?: number;
-  longitude?: number;
+  current_latitude?: number;
+  current_longitude?: number;
 };
 
 function requestStatusBadge(status: string) {
@@ -69,7 +69,7 @@ export default function DriverDashboard() {
     const next = !available;
     setAvailable(next);
     if (myVehicle) {
-      await updateVehicleStatus(myVehicle.id, next ? 'Available' : 'Off Duty');
+      await updateVehicleStatus(myVehicle.id, next ? 'Available' : 'Offline');
       toast.success(next ? 'You are now available for pickups' : 'You are now off duty');
     }
   }
@@ -85,7 +85,7 @@ export default function DriverDashboard() {
 
   async function startTrip(id: string) {
     setUpdating(id);
-    const { error } = await updateShuttleRequestStatus(id, 'InProgress');
+    const { error } = await updateShuttleRequestStatus(id, 'InTransit');
     setUpdating(null);
     if (error) { toast.error('Failed to update'); return; }
     toast.success('Trip started');

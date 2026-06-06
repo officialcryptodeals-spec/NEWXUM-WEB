@@ -46,14 +46,15 @@ export interface PagedResult<T> {
 
 // ── Emergency ─────────────────────────────────────────────────
 export type ReportType = 'Medical' | 'Security';
-export type IncidentStatus = 'Pending' | 'Dispatched' | 'EnRoute' | 'Resolved' | 'Cancelled';
+export type IncidentStatus = 'Pending' | 'Dispatched' | 'EnRoute' | 'OnScene' | 'Resolved' | 'Cancelled';
 
 export interface Incident {
   id: string;
   reportType: ReportType;
   status: IncidentStatus;
   priority: string;
-  patientId: string;
+  patientId?: string;
+  reporterId?: string;
   patientName?: string;
   patientEmergencyContact?: string;
   latitude: number;
@@ -76,8 +77,10 @@ export interface MissingPersonAlert {
   description: string;
   photoUrl?: string;
   lastSeenAreaText?: string;
+  lastSeenArea?: string;
   status: AlertStatus;
   reportedBy: string;
+  reporterName?: string;
   sightingCount: number;
   createdAt: string;
 }
@@ -86,6 +89,7 @@ export interface Sighting {
   id: string;
   alertId: string;
   reportedBy: string;
+  reporterName?: string;
   latitude: number;
   longitude: number;
   locationDescription?: string;

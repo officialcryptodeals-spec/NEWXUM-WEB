@@ -130,7 +130,7 @@ export default function WorshipperDashboard() {
       pickup_location: shuttlePickup,
       destination_location: shuttleDest,
       passenger_count: parseInt(shuttlePassengers),
-      status: 'Pending',
+      status: 'Requested',
       pickup_latitude: 6.8403,
       pickup_longitude: 3.3864,
     });

@@ -63,7 +63,7 @@ export default function MedicalDashboard() {
 
   async function markOnScene(id: string) {
     setUpdating(id);
-    const { error } = await updateIncidentStatus(id, 'EnRoute');
+    const { error } = await updateIncidentStatus(id, 'OnScene');
     setUpdating(null);
     if (error) { toast.error('Update failed'); return; }
     toast.success('Status updated to En Route');
