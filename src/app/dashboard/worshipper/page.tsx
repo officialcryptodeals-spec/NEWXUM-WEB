@@ -13,7 +13,7 @@ type MissingPerson = {
   full_name: string;
   status: string;
   description: string;
-  last_seen_area_text?: string;
+  last_seen_area?: string;
   sighting_count: number;
   created_at: string;
   photo_url?: string;
@@ -70,7 +70,7 @@ export default function WorshipperDashboard() {
       report_type: sosType,
       status: 'Pending',
       priority: 'High',
-      patient_id: session?.user?.id ?? 'unknown',
+      reporter_id: session?.user?.id ?? 'unknown',
       patient_name: session?.user?.name ?? 'Unknown',
       latitude: 6.8403,
       longitude: 3.3864,
@@ -90,9 +90,9 @@ export default function WorshipperDashboard() {
       full_name: mpName,
       age: mpAge ? parseInt(mpAge) : null,
       description: mpDesc,
-      last_seen_area_text: mpArea,
+      last_seen_area: mpArea,
       status: 'Open',
-      reported_by: session?.user?.name ?? 'Unknown',
+      reporter_name: session?.user?.name ?? 'Unknown',
       sighting_count: 0,
     });
     setSubmitting(false);
@@ -127,8 +127,8 @@ export default function WorshipperDashboard() {
     const { error } = await createShuttleRequest({
       passenger_id: session?.user?.id ?? 'unknown',
       passenger_name: session?.user?.name ?? 'Unknown',
-      pickup_location_text: shuttlePickup,
-      destination_text: shuttleDest,
+      pickup_location: shuttlePickup,
+      destination_location: shuttleDest,
       passenger_count: parseInt(shuttlePassengers),
       status: 'Pending',
       pickup_latitude: 6.8403,
@@ -291,7 +291,7 @@ export default function WorshipperDashboard() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-slate-900 text-sm">{person.full_name}</div>
-                        <div className="text-xs text-slate-500 mt-0.5">{person.last_seen_area_text}</div>
+                        <div className="text-xs text-slate-500 mt-0.5">{person.last_seen_area}</div>
                         <div className="text-xs text-slate-400 mt-0.5">{formatElapsed(person.created_at)}</div>
                       </div>
                       <Badge variant="warning">{person.sighting_count} sightings</Badge>

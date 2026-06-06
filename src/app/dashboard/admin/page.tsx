@@ -23,7 +23,7 @@ type MissingPerson = {
   id: string;
   full_name: string;
   status: string;
-  last_seen_area_text?: string;
+  last_seen_area?: string;
   sighting_count: number;
   created_at: string;
 };
@@ -32,8 +32,8 @@ type ShuttleRequest = {
   id: string;
   passenger_name?: string;
   status: string;
-  pickup_location_text?: string;
-  destination_text?: string;
+  pickup_location?: string;
+  destination_location?: string;
   created_at: string;
 };
 
@@ -93,7 +93,7 @@ export default function AdminCommandCenter() {
   const activeInc = incidents.filter(i => ['Dispatched', 'EnRoute', 'OnScene'].includes(i.status));
   const resolvedToday = incidents.filter(i => i.status === 'Resolved');
   const openMissing = missingPersons.filter(p => p.status === 'Open');
-  const pendingShuttle = shuttleRequests.filter(r => r.status === 'Pending');
+  const pendingShuttle = shuttleRequests.filter(r => r.status === 'Requested');
   const onDuty = personnel.filter(p => p.status === 'On Duty' || p.status === 'Available');
 
   const tabs: { id: Tab; label: string; count?: number }[] = [
@@ -191,7 +191,7 @@ export default function AdminCommandCenter() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-slate-900 truncate">{p.full_name}</div>
-                          <div className="text-xs text-slate-400">{p.last_seen_area_text ?? 'Unknown location'} · {p.sighting_count} sightings</div>
+                          <div className="text-xs text-slate-400">{p.last_seen_area ?? 'Unknown location'} · {p.sighting_count} sightings</div>
                         </div>
                         <Badge variant={p.status === 'Open' ? 'warning' : p.status === 'Found' ? 'success' : 'secondary'}>
                           {p.status}
@@ -220,10 +220,10 @@ export default function AdminCommandCenter() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="text-sm font-medium text-slate-900 truncate">{r.passenger_name ?? 'Passenger'}</div>
-                          <div className="text-xs text-slate-400 truncate">{r.pickup_location_text} → {r.destination_text}</div>
+                          <div className="text-xs text-slate-400 truncate">{r.pickup_location} → {r.destination_location}</div>
                         </div>
                         <Badge variant={
-                          r.status === 'Pending' ? 'warning' : r.status === 'Completed' ? 'success' : 'info'
+                          r.status === 'Requested' ? 'warning' : r.status === 'Completed' ? 'success' : 'info'
                         }>{r.status}</Badge>
                       </div>
                     ))}
@@ -349,7 +349,7 @@ export default function AdminCommandCenter() {
                     {missingPersons.map(p => (
                       <tr key={p.id} className="hover:bg-slate-50">
                         <td className="py-3 pr-4 font-medium text-slate-900">{p.full_name}</td>
-                        <td className="py-3 pr-4 text-slate-500">{p.last_seen_area_text ?? '—'}</td>
+                        <td className="py-3 pr-4 text-slate-500">{p.last_seen_area ?? '—'}</td>
                         <td className="py-3 pr-4">
                           <Badge variant={p.status === 'Open' ? 'warning' : p.status === 'Found' ? 'success' : 'secondary'}>
                             {p.status}
@@ -392,10 +392,10 @@ export default function AdminCommandCenter() {
                     {shuttleRequests.map(r => (
                       <tr key={r.id} className="hover:bg-slate-50">
                         <td className="py-3 pr-4 font-medium text-slate-900">{r.passenger_name ?? 'Unknown'}</td>
-                        <td className="py-3 pr-4 text-slate-500">{r.pickup_location_text ?? '—'}</td>
-                        <td className="py-3 pr-4 text-slate-500">{r.destination_text ?? '—'}</td>
+                        <td className="py-3 pr-4 text-slate-500">{r.pickup_location ?? '—'}</td>
+                        <td className="py-3 pr-4 text-slate-500">{r.destination_location ?? '—'}</td>
                         <td className="py-3 pr-4">
-                          <Badge variant={r.status === 'Pending' ? 'warning' : r.status === 'Completed' ? 'success' : 'info'}>
+                          <Badge variant={r.status === 'Requested' ? 'warning' : r.status === 'Completed' ? 'success' : 'info'}>
                             {r.status}
                           </Badge>
                         </td>

@@ -13,8 +13,8 @@ type ShuttleRequest = {
   passenger_id: string;
   passenger_name?: string;
   status: string;
-  pickup_location_text?: string;
-  destination_text?: string;
+  pickup_location?: string;
+  destination_location?: string;
   passenger_count?: number;
   vehicle_id?: string;
   driver_name?: string;
@@ -35,7 +35,7 @@ type Vehicle = {
 
 function requestStatusBadge(status: string) {
   const v: Record<string, 'warning' | 'info' | 'success' | 'destructive' | 'secondary'> = {
-    Pending: 'warning', Assigned: 'info', InProgress: 'info',
+    Requested: 'warning', Assigned: 'info', InTransit: 'info',
     Completed: 'success', Cancelled: 'destructive',
   };
   return v[status] ?? 'secondary';
@@ -102,8 +102,8 @@ export default function DriverDashboard() {
     await load();
   }
 
-  const pending = requests.filter(r => r.status === 'Pending');
-  const myActive = requests.filter(r => ['Assigned', 'InProgress'].includes(r.status) && r.driver_name === session?.user?.name);
+  const pending = requests.filter(r => r.status === 'Requested');
+  const myActive = requests.filter(r => ['Assigned', 'InTransit'].includes(r.status) && r.driver_name === session?.user?.name);
   const completed = requests.filter(r => r.status === 'Completed');
 
   return (
@@ -137,7 +137,7 @@ export default function DriverDashboard() {
             <div className="font-semibold text-slate-900">{myVehicle.registration}</div>
             <div className="text-sm text-slate-500">Capacity: {myVehicle.capacity} passengers</div>
           </div>
-          <Badge variant={myVehicle.status === 'Available' ? 'success' : myVehicle.status === 'On Trip' ? 'info' : 'secondary'}>
+          <Badge variant={myVehicle.status === 'Available' ? 'success' : myVehicle.status === 'EnRoute' ? 'info' : 'secondary'}>
             {myVehicle.status}
           </Badge>
         </div>
@@ -185,7 +185,7 @@ export default function DriverDashboard() {
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-slate-900 text-sm">{req.passenger_name ?? 'Passenger'}</div>
                           <div className="text-xs text-slate-400 truncate">
-                            {req.pickup_location_text ?? '—'} → {req.destination_text ?? '—'}
+                            {req.pickup_location ?? '—'} → {req.destination_location ?? '—'}
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-1">
@@ -219,7 +219,7 @@ export default function DriverDashboard() {
                       <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
                       <div>
                         <div className="text-xs text-slate-400">Pickup</div>
-                        <div className="text-slate-700">{selected.pickup_location_text ?? 'Unknown'}</div>
+                        <div className="text-slate-700">{selected.pickup_location ?? 'Unknown'}</div>
                       </div>
                     </div>
                     <div className="w-px h-4 bg-slate-200 ml-1" />
@@ -227,7 +227,7 @@ export default function DriverDashboard() {
                       <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0" />
                       <div>
                         <div className="text-xs text-slate-400">Destination</div>
-                        <div className="text-slate-700">{selected.destination_text ?? 'Unknown'}</div>
+                        <div className="text-slate-700">{selected.destination_location ?? 'Unknown'}</div>
                       </div>
                     </div>
                   </div>
@@ -237,7 +237,7 @@ export default function DriverDashboard() {
                   </div>
                 </div>
 
-                {selected.status === 'Pending' && available && (
+                {selected.status === 'Requested' && available && (
                   <button onClick={() => acceptRequest(selected)} disabled={!!updating}
                     className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-semibold rounded-xl transition-colors text-sm">
                     {updating === selected.id ? 'Accepting...' : 'Accept Pickup'}
@@ -249,7 +249,7 @@ export default function DriverDashboard() {
                     {updating === selected.id ? 'Starting...' : 'Passenger On Board — Start Trip'}
                   </button>
                 )}
-                {selected.status === 'InProgress' && (
+                {selected.status === 'InTransit' && (
                   <button onClick={() => completeTrip(selected.id)} disabled={!!updating}
                     className="w-full py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-semibold rounded-xl transition-colors text-sm">
                     {updating === selected.id ? 'Completing...' : 'Complete Trip'}

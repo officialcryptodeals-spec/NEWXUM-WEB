@@ -14,7 +14,7 @@ type Incident = {
   status: string;
   priority: string;
   patient_name?: string;
-  patient_id: string;
+  reporter_id: string;
   description?: string;
   latitude: number;
   longitude: number;
