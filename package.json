@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^8.0.0",
-    "@netlify/plugin-nextjs": "^5.15.11",
     "@supabase/supabase-js": "^2.107.0",
     "axios": "^1.17.0",
     "class-variance-authority": "^0.7.0",
