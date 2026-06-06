@@ -1,11 +1,14 @@
 // ── Auth & Users ──────────────────────────────────────────────
 export type Role =
   | 'worshipper'
+  | 'responder'
   | 'medical_officer'
   | 'security_officer'
   | 'driver'
   | 'admin'
   | 'host';
+
+export type ResponderType = 'medical' | 'security' | 'driver';
 
 export interface User {
   id: string;

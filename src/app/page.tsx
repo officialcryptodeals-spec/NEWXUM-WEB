@@ -4,14 +4,15 @@ import { redirect } from 'next/navigation';
 import type { Role } from '@/types';
 import Link from 'next/link';
 import { Badge } from '@/components/ui';
-import { Shield, AlertTriangle, Search, Bus, Car, ArrowRight, ChevronRight } from 'lucide-react';
+import { Shield, TriangleAlert as AlertTriangle, Search, Bus, Car, ArrowRight, ChevronRight } from 'lucide-react';
 
 const ROLE_HOME: Record<Role, string> = {
-  worshipper:       '/worshipper/bookings',
-  medical_officer:  '/responder',
-  security_officer: '/responder',
-  driver:           '/driver/rides',
-  admin:            '/admin/dashboard',
+  worshipper:       '/dashboard/worshipper',
+  responder:        '/dashboard/medical',
+  medical_officer:  '/dashboard/medical',
+  security_officer: '/dashboard/security',
+  driver:           '/dashboard/driver',
+  admin:            '/dashboard/admin',
   host:             '/host/properties',
 };
 
